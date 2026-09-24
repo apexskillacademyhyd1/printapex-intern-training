@@ -1,6 +1,6 @@
 # PrintApex Intern Training Program
 
-This folder is your 7-day data analytics project. You'll work with real production data, clean it, analyze it, and learn the skills you need to be a data engineer.
+This is your 7-day data analytics project. You'll work with real production data, clean it, analyze it, and learn the skills you need to be a data engineer.
 
 Everything you need is here. No external tools, no paid software, just Python, SQL, and Excel—all free.
 
@@ -8,7 +8,7 @@ Everything you need is here. No external tools, no paid software, just Python, S
 
 By the end of Day 7, you'll have:
 
-- Two cleaned datasets (10k and 25k records)
+- A cleaned dataset (10k records)
 - Python notebooks showing your work
 - SQL queries analyzing the data
 - An Excel dashboard with insights
@@ -23,26 +23,25 @@ This is real portfolio work. You can show this to future employers.
 - How to remove duplicates and standardize formats
 - How to validate data quality
 - How to write SQL queries for analysis
-- How to create visualizations
+- How to create visualizations in Python and Excel
 - How to build a professional dashboard
 
 ## What's Inside This Folder
 
 - `START_HERE.md` — Your entry point
-- `DAILY_TASKS.md` — Your daily instructions (I update this each morning)
-- Two data files: `shops_raw_data_10k.csv` and `shops_raw_data_25k.csv`
+- `DAILY_TASKS.md` — Your daily instructions
+- `shops_raw_data_10k.csv` — Your dataset
 
-That's all you need. Start with `START_HERE.md`.
+Start with `START_HERE.md`.
 
 ## Tools You'll Use
 
 All free, all open-source:
-- Python 3.10+
-- Jupyter Notebook
+- Python 3.10+ with Jupyter Notebook
 - Git
-- LibreOffice Calc or Excel
+- Excel
 - VS Code (optional but recommended)
 
 ## Timeline
 
-7 days of work. I'll update your daily tasks each morning. Come back here to see what's next.
+7 days of work. Follow the daily tasks in `DAILY_TASKS.md`.

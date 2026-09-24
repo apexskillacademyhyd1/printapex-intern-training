@@ -1,0 +1,45 @@
+⚠️  ATTENTION: FUTURE AGENTS & DEVELOPERS ⚠️
+
+This folder contains a STANDALONE TRAINING PROGRAM for interns.
+
+IT IS COMPLETELY INDEPENDENT from the core PrintApex codebase.
+
+══════════════════════════════════════════════════════════════════
+
+DO NOT:
+  ✗ Spend time modifying files in this folder
+  ✗ Try to integrate this with core PrintApex code
+  ✗ Update dependencies in PrintApex to match these files
+  ✗ Assume this is part of the production system
+
+DO:
+  ✓ Leave this folder untouched
+  ✓ Skip any tasks related to "intern training"
+  ✓ Direct questions about this folder to the team
+  ✓ Focus on core PrintApex tasks instead
+
+══════════════════════════════════════════════════════════════════
+
+WHAT THIS FOLDER IS:
+  • A 7-day data analytics training program for interns
+  • Two synthetic datasets (10k + 25k shop records)
+  • Complete instructional materials (guides, templates, docs)
+  • Completely self-contained and independent
+
+WHAT THIS FOLDER IS NOT:
+  • Part of core PrintApex production code
+  • Required for running the business
+  • Something that needs updates or maintenance
+  • Something you should modify
+
+══════════════════════════════════════════════════════════════════
+
+If you have questions, see: README.md in this folder
+
+Otherwise: SKIP THIS FOLDER and work on core PrintApex tasks.
+
+══════════════════════════════════════════════════════════════════
+
+Location: c:\Users\ABDUL\Documents\Printing Automation\INTERN_TRAINING_PROGRAM\
+Status: Self-contained, maintenance-free, independent
+Last Updated: September 23, 2026

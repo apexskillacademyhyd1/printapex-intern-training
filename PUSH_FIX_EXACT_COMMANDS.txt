@@ -1,0 +1,75 @@
+════════════════════════════════════════════════════════════════════════════════
+  EXACT COMMANDS TO FIX GITHUB PUSH
+════════════════════════════════════════════════════════════════════════════════
+
+PROBLEM:
+  GitHub repo has unrelated files from initialization
+  Your local commit is ready to push but remote rejects it
+
+SOLUTION:
+  Force your local changes to GitHub (overwrite remote)
+
+════════════════════════════════════════════════════════════════════════════════
+
+STEP 1: Open PowerShell and navigate to folder
+
+cd "C:\Users\ABDUL\Documents\Printing Automation\INTERN_TRAINING_PROGRAM"
+
+════════════════════════════════════════════════════════════════════════════════
+
+STEP 2: Run this command (forcefully push your files)
+
+git push -f origin main
+
+════════════════════════════════════════════════════════════════════════════════
+
+EXPECTED OUTPUT:
+
++ 666e0be...c6a1e23 main -> main (forced update)
+
+(Or similar - the "forced update" line is key)
+
+════════════════════════════════════════════════════════════════════════════════
+
+STEP 3: Verify on GitHub
+
+Go to: https://github.com/apexskillacademyhyd1/printapex-intern-training
+
+You should now see:
+  ✓ Files: DAILY_TASKS.md, START_HERE.md, README.md
+  ✓ Folder: data/raw with CSV files
+  ✓ Commit: "Initial upload: Day 0 setup tasks + Phase 1 overview"
+
+════════════════════════════════════════════════════════════════════════════════
+
+IF IT WORKS:
+
+Great! Now:
+1. Share GitHub link with interns
+2. They clone and read START_HERE.md
+3. They work through DAILY_TASKS.md
+4. Tomorrow: You update DAILY_TASKS.md with new tasks
+
+════════════════════════════════════════════════════════════════════════════════
+
+IF IT STILL FAILS:
+
+Try this alternative:
+
+1. git fetch origin main
+2. git reset --hard origin/main
+3. git add .
+4. git commit -m "Sync with remote"
+5. git push origin main
+
+Then verify on GitHub.
+
+════════════════════════════════════════════════════════════════════════════════
+
+THAT'S IT!
+
+Just run: git push -f origin main
+
+The -f flag forces your local files to overwrite the remote.
+
+════════════════════════════════════════════════════════════════════════════════

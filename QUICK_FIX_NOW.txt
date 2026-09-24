@@ -1,0 +1,91 @@
+════════════════════════════════════════════════════════════════════════════════
+  🚀 QUICK FIX - DO THIS NOW (2 MINUTES)
+════════════════════════════════════════════════════════════════════════════════
+
+PROBLEM:
+  Permission denied when pushing to GitHub
+
+SOLUTION:
+  Use GitHub Personal Access Token (GitHub removed password login)
+
+════════════════════════════════════════════════════════════════════════════════
+
+STEP 1: Create Personal Access Token on GitHub (1 minute)
+
+1. Go to: https://github.com/settings/tokens
+2. Click: "Generate new token" → "Generate new token (classic)"
+3. Name: "printapex-training"
+4. Expiration: 90 days
+5. Select scopes: repo, gist
+6. Click: "Generate token"
+7. COPY the token (you see it once only)
+
+════════════════════════════════════════════════════════════════════════════════
+
+STEP 2: Update Git Remote (1 minute)
+
+Open PowerShell and run these commands:
+
+cd "C:\Users\ABDUL\Documents\Printing Automation\INTERN_TRAINING_PROGRAM"
+
+git remote remove origin
+
+git remote add origin https://apexskillacademyhyd1:PASTE_YOUR_TOKEN_HERE@github.com/apexskillacademyhyd1/printapex-intern-training.git
+
+Replace: PASTE_YOUR_TOKEN_HERE with the token from Step 1
+
+Example (not real):
+git remote add origin https://apexskillacademyhyd1:ghp_1234567890abcdefghijklmnop@github.com/apexskillacademyhyd1/printapex-intern-training.git
+
+════════════════════════════════════════════════════════════════════════════════
+
+STEP 3: Push to GitHub
+
+git push -u origin main
+
+════════════════════════════════════════════════════════════════════════════════
+
+EXPECTED OUTPUT:
+
+Counting objects: 5, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), xxxx bytes, done.
+Total xxxx (delta xxx), reused 0 (delta 0)
+To https://github.com/apexskillacademyhyd1/printapex-intern-training.git
+ * [new branch]      main -> main
+Branch 'main' set up to track remote branch 'main' from 'origin'.
+
+════════════════════════════════════════════════════════════════════════════════
+
+VERIFY ON GITHUB:
+
+1. Go to: https://github.com/apexskillacademyhyd1/printapex-intern-training
+2. You should see:
+   - Files: DAILY_TASKS.md, START_HERE.md, README.md
+   - Folder: data/ (with CSV files)
+   - Commit message: "Initial upload: Day 0 setup tasks + Phase 1 overview"
+
+If you see all this → SUCCESS! ✅
+
+════════════════════════════════════════════════════════════════════════════════
+
+NEXT STEPS:
+
+1. Share GitHub link with interns:
+   https://github.com/apexskillacademyhyd1/printapex-intern-training
+
+2. Tell them:
+   "Clone this repo or download the files.
+    Read START_HERE.md first.
+    Then check DAILY_TASKS.md for today's tasks."
+
+3. Tomorrow: Update DAILY_TASKS.md with Phase 2 tasks
+
+════════════════════════════════════════════════════════════════════════════════
+
+STILL NOT WORKING?
+
+Read: GITHUB_SETUP_FIX.md (more detailed solutions)
+
+════════════════════════════════════════════════════════════════════════════════

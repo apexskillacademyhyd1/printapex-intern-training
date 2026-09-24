@@ -22,8 +22,8 @@ Download and install these (all free):
 **Git** - https://git-scm.com
 - This tracks all your work
 
-**LibreOffice Calc** - https://www.libreoffice.org
-- Or use Excel if you have it
+**Excel** (or similar spreadsheet tool)
+- You'll use this for your final dashboard
 
 **VS Code (optional)** - https://code.visualstudio.com
 - Good for editing Python files
@@ -78,11 +78,10 @@ This keeps large files out of Git.
 
 ### Step 5: Get Your Data
 
-Download these files from this repository:
+Download this file from this repository:
 - `shops_raw_data_10k.csv`
-- `shops_raw_data_25k.csv`
 
-Put them in your `data/raw/` folder.
+Put it in your `data/raw/` folder.
 
 ### Step 6: First Commit
 
@@ -168,8 +167,8 @@ Setup is done. See you tomorrow for Day 1.
 ### Your Deliverable
 
 A Jupyter notebook showing:
-- Both datasets loaded
-- First 10 rows of each
+- Dataset loaded
+- First 10 rows
 - Data types for each column
 - Null value counts for each column
 
@@ -208,19 +207,16 @@ That's what we're going to fix over the next week.
    import pandas as pd
    
    df_10k = pd.read_csv('../data/raw/shops_raw_data_10k.csv')
-   df_25k = pd.read_csv('../data/raw/shops_raw_data_25k.csv')
    ```
 
 3. **Look for duplicates**
 
    ```python
    # Check for exact duplicates
-   print("10k duplicates:", df_10k.duplicated().sum())
-   print("25k duplicates:", df_25k.duplicated().sum())
+   print("Duplicates:", df_10k.duplicated().sum())
    
    # Check for duplicates on specific columns (like email or phone)
-   print("10k duplicate emails:", df_10k.duplicated(subset=['email']).sum())
-   print("25k duplicate emails:", df_25k.duplicated(subset=['email']).sum())
+   print("Duplicate emails:", df_10k.duplicated(subset=['email']).sum())
    ```
 
 4. **Analyze null values in detail**
@@ -258,18 +254,15 @@ That's what we're going to fix over the next week.
 
    ```python
    print("\n=== DATA QUALITY SUMMARY ===")
-   print(f"10k rows: {df_10k.shape[0]}, columns: {df_10k.shape[1]}")
-   print(f"25k rows: {df_25k.shape[0]}, columns: {df_25k.shape[1]}")
-   print(f"\n10k null values:\n{df_10k.isnull().sum()}")
-   print(f"\n25k null values:\n{df_25k.isnull().sum()}")
-   print(f"\n10k duplicates: {df_10k.duplicated().sum()}")
-   print(f"25k duplicates: {df_25k.duplicated().sum()}")
+   print(f"Rows: {df_10k.shape[0]}, columns: {df_10k.shape[1]}")
+   print(f"\nNull values:\n{df_10k.isnull().sum()}")
+   print(f"\nDuplicates: {df_10k.duplicated().sum()}")
    ```
 
 ### Your Deliverable
 
 A Jupyter notebook with:
-- Duplicate analysis for both datasets
+- Duplicate analysis
 - Null value analysis (counts and percentages)
 - Sample values from text columns to identify format issues
 - A summary report

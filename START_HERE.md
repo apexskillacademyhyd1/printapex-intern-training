@@ -9,7 +9,7 @@ You'll load two CSV files with production data. They have missing values, incons
 Get these installed today:
 - **Python 3.10 or higher** - https://www.python.org/downloads/
 - **Git** - https://git-scm.com
-- **LibreOffice Calc** or **Excel** (if you have it)
+- **Excel** (or similar spreadsheet tool)
 - **VS Code** (optional, but I recommend it) - https://code.visualstudio.com
 
 That's it. Nothing paid. Everything open-source.
