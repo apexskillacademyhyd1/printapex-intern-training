@@ -2,91 +2,54 @@
 
 Welcome. You're going to spend the next 7 days working on a real data project. It's not a tutorial. It's real work with real data that has real problems.
 
-You'll load two CSV files with production data. They have missing values, inconsistent formats, duplicates—all the mess you see in actual jobs. Your job is to clean them, analyze them, and build a professional report. By the end, you'll have portfolio pieces you can show to future employers.
+You'll load a CSV file with production data. It has missing values, inconsistent formats, duplicates—all the mess you see in actual jobs. Your job is to clean it, analyze it, and build a professional report. By the end, you'll have portfolio pieces you can show to future employers.
 
-## What You Need (Everything Is Free)
+## Your First Step — Day 0 Setup
 
-Get these installed today:
-- **Python 3.10 or higher** - https://www.python.org/downloads/
-- **Git** - https://git-scm.com
-- **Excel** (or similar spreadsheet tool)
-- **VS Code** (optional, but I recommend it) - https://code.visualstudio.com
+If you've never used Python, Git, or Jupyter before, start here:
 
-That's it. Nothing paid. Everything open-source.
+**Read:** `DAY_0_COMPLETE_SETUP_GUIDE.md`
 
-## Your First Steps Today
+This guide walks you through installing everything you need. Follow it step by step. Don't skip steps.
 
-1. Install Python. Make sure you check "Add Python to PATH" during setup.
-2. Open a terminal and verify: `python --version` (should be 3.10+)
-3. Install Git.
-4. Create your project folder:
-   ```
-   mkdir PrintShopDataProject
-   cd PrintShopDataProject
-   ```
-5. Initialize Git:
-   ```
-   git init
-   git config user.name "Your Name"
-   git config user.email "your.email@example.com"
-   ```
-6. Create your folder structure:
-   ```
-   mkdir data\raw data\cleaned data\processed notebooks scripts sql output\charts
-   ```
-7. Set up Python. Create a virtual environment:
-   ```
-   python -m venv venv
-   venv\Scripts\activate
-   ```
-   You should see `(venv)` in your terminal.
-8. Install the libraries you'll need:
-   ```
-   pip install pandas jupyter matplotlib seaborn
-   ```
-9. Download the two data files from this repository and put them in `data/raw/`:
-   - `shops_raw_data_10k.csv`
-   - `shops_raw_data_25k.csv`
-10. Create a `.gitignore` file in your project folder with this content:
-    ```
-    *.csv
-    *.xlsx
-    *.db
-    venv/
-    __pycache__/
-    .ipynb_checkpoints/
-    ```
-11. Make your first commit:
-    ```
-    git add .
-    git commit -m "Initial project setup"
-    ```
-12. Test Jupyter:
-    ```
-    jupyter notebook
-    ```
-    A browser window should open. Close it with Ctrl+C. If that worked, you're ready.
+When you finish Day 0, come back here.
 
-## What Happens Next
+## After Day 0 — Daily Work
 
-Tomorrow, come back to `DAILY_TASKS.md`. I'll have your Day 1 tasks there. Each morning I update that file with what you need to do that day.
+Once you've completed Day 0 setup, check the `DAILY_TASKS.md` file every morning.
 
-Your tasks will tell you exactly what to build, what to analyze, what to commit. Follow them in order.
+That file contains your daily instructions. I update it each day with the next day's work.
 
-## Your Timeline
+## What to Expect
 
-**Days 1-2:** Load and profile the data. Understand what you're working with.
+**Day 0:** Install tools, download data, verify everything works.
 
-**Days 3-4:** Clean it. Remove bad records, fix missing values, get it organized.
+**Day 1:** Load and inspect the data. Understand what you have before changing anything.
 
-**Days 5-6:** Standardize it. Make formats consistent.
+**Days 2-7:** Clean, standardize, validate, analyze, and build your final dashboard.
 
-**Days 7-8:** Validate it. Write rules to catch errors.
+By Day 7, you'll have:
+- A cleaned dataset
+- Python analysis code
+- SQL queries
+- An Excel dashboard
+- Git history showing your work
 
-**Days 9-11:** Analyze it. Write SQL, create charts, draw insights.
+That's real portfolio material.
 
-**Day 12:** Build your final Excel dashboard.
+## Tools You'll Use
 
-## Get Started
+All free, all open-source:
+- Python 3.10+
+- Jupyter Notebook
+- Git
+- pandas, matplotlib, seaborn
+- Excel
 
-Go to `DAILY_TASKS.md` and do the setup work. I'll see you on Day 1.
+## The Rule
+
+Follow the guides in order. Don't skip steps. If something breaks, take a screenshot and ask your mentor. This is part of learning.
+
+Ready? Open `DAY_0_COMPLETE_SETUP_GUIDE.md` now.
+
+Let's go.
