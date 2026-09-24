@@ -1,0 +1,16 @@
+# Trainer files - local only
+TRAINER_*.md
+TRAINING_*.md
+FINAL_*.md
+FOR_*.md
+GITHUB_*.md
+IMPLEMENTATION_*.txt
+QUICK_*.txt
+INTERN_VIEW_*.md
+INTERN_TRAINING_*.md
+INTERN_QUICK_*.md
+PUSH_*.txt
+PrintShopDataProject/
+*.csv
+*.xlsx
+⚠️*
