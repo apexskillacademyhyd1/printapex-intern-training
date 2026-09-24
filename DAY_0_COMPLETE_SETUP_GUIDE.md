@@ -578,10 +578,10 @@ If all four commands returned version numbers, all your libraries are installed.
 
 We don't want certain files committed to Git:
 
-- CSV data files (large and sensitive)
-- Excel files
+- Excel files (large and personal)
 - Database files
 - The virtual environment folder
+- Jupyter temporary files
 
 We'll create a file called `.gitignore` to tell Git to ignore these.
 
@@ -598,7 +598,6 @@ Press **Enter**.
 A text editor will open. Paste this:
 
 ```
-*.csv
 *.xlsx
 *.db
 venv/
@@ -608,12 +607,13 @@ __pycache__/
 
 This tells Git:
 
-- Don't commit any `.csv` files (your data stays local)
-- Don't commit any `.xlsx` files (Excel files)
+- Don't commit any `.xlsx` files (Excel files - large and personal)
 - Don't commit any `.db` files (databases)
 - Don't commit the `venv/` folder (virtual environment)
 - Don't commit `__pycache__/` (Python cache)
 - Don't commit `.ipynb_checkpoints/` (Jupyter temporary files)
+
+**Important:** We DO NOT ignore `*.csv` files because this training data is synthetic and safe to commit to Git. Your data cleaning work will be part of your Git history.
 
 ### 9.2 Save the file
 

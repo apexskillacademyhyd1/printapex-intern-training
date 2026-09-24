@@ -14,6 +14,9 @@ PrintShopDataProject/
 *.xlsx
 ⚠️*
 
-# Data files - 25k reserved for later phases
+# Data files - 25k reserved for later phases (do not commit)
 shops_raw_data_25k.csv
+
+# Note: CSV files in data/raw/, data/cleaned/, data/processed/ ARE tracked
+# This is training data (synthetic), so it's safe to commit to Git
 
