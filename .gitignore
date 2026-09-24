@@ -11,6 +11,9 @@ INTERN_TRAINING_*.md
 INTERN_QUICK_*.md
 PUSH_*.txt
 PrintShopDataProject/
-*.csv
 *.xlsx
 ⚠️*
+
+# Data files - 25k reserved for later phases
+shops_raw_data_25k.csv
+
