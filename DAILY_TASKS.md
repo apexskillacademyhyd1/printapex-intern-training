@@ -2,7 +2,7 @@
 
 I update this file each morning with your tasks for the day. Check back here every morning to see what you need to work on.
 
-You're working with real production data from our system. Two CSV files with quality problems you need to identify and fix. By the end of this week, you'll have completed a full data engineering project.
+You're working with real production data from our system. Two CSV files with quality problems you need to identify and fix. By the end of this week, you'll have completed a full data analytics project.
 
 ---
 

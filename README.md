@@ -1,6 +1,6 @@
 # PrintApex Intern Training Program
 
-This is your 7-day data analytics project. You'll work with real production data, clean it, analyze it, and learn the skills you need to be a data engineer.
+This is your 7-day data analytics project. You'll work with real production data, clean it, analyze it, and learn the skills you need to be a data analyst.
 
 Everything you need is here. No external tools, no paid software, just Python, SQL, and Excel—all free.
 
