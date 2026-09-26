@@ -189,6 +189,138 @@ You'll notice:
 
 That's what we're going to fix over the next week.
 
-## DAYS 2-7 (Coming Tomorrow)
+## DAY 2 - Data Cleaning Part 1 (Handling Nulls & Data Types)
 
-I'll add more tasks here each morning. Check back tomorrow for Day 2.
+**What you're doing:** Finding and fixing missing values and incorrect data types.
+
+**Why it matters:** Bad data causes bad analysis. You need clean data before any real work.
+
+### Your Tasks
+
+1. **Create a new notebook: `02_data_cleaning_part1.ipynb`**
+
+   Open Jupyter:
+   ```
+   jupyter notebook
+   ```
+
+2. **Load both datasets**
+
+   ```python
+   import pandas as pd
+   import numpy as np
+   
+   df_10k = pd.read_csv('../data/raw/shops_raw_data_10k.csv')
+   df_25k = pd.read_csv('../data/raw/shops_raw_data_25k.csv')
+   
+   print("10k dataset shape:", df_10k.shape)
+   print("25k dataset shape:", df_25k.shape)
+   ```
+
+3. **Identify null values by column**
+
+   ```python
+   print("=" * 50)
+   print("10K DATASET - NULL VALUE ANALYSIS")
+   print("=" * 50)
+   null_counts_10k = df_10k.isnull().sum()
+   null_percent_10k = (df_10k.isnull().sum() / len(df_10k)) * 100
+   
+   for col in df_10k.columns:
+       if null_counts_10k[col] > 0:
+           print(f"{col}: {null_counts_10k[col]} nulls ({null_percent_10k[col]:.1f}%)")
+   
+   print("\n" + "=" * 50)
+   print("25K DATASET - NULL VALUE ANALYSIS")
+   print("=" * 50)
+   null_counts_25k = df_25k.isnull().sum()
+   null_percent_25k = (df_25k.isnull().sum() / len(df_25k)) * 100
+   
+   for col in df_25k.columns:
+       if null_counts_25k[col] > 0:
+           print(f"{col}: {null_counts_25k[col]} nulls ({null_percent_25k[col]:.1f}%)")
+   ```
+
+4. **Fix numeric columns: Replace nulls with median**
+
+   ```python
+   # For 10k dataset
+   numeric_cols = df_10k.select_dtypes(include=[np.number]).columns
+   
+   for col in numeric_cols:
+       if df_10k[col].isnull().sum() > 0:
+           median_val = df_10k[col].median()
+           df_10k[col].fillna(median_val, inplace=True)
+           print(f"Filled {col} nulls with median: {median_val}")
+   
+   # For 25k dataset
+   for col in numeric_cols:
+       if df_25k[col].isnull().sum() > 0:
+           median_val = df_25k[col].median()
+           df_25k[col].fillna(median_val, inplace=True)
+           print(f"Filled {col} nulls with median: {median_val}")
+   ```
+
+5. **Fix categorical columns: Use "Unknown" for nulls**
+
+   ```python
+   # For 10k dataset
+   categorical_cols = df_10k.select_dtypes(include=['object']).columns
+   
+   for col in categorical_cols:
+       if df_10k[col].isnull().sum() > 0:
+           df_10k[col].fillna('Unknown', inplace=True)
+           print(f"Filled {col} nulls with 'Unknown'")
+   
+   # For 25k dataset
+   for col in categorical_cols:
+       if df_25k[col].isnull().sum() > 0:
+           df_25k[col].fillna('Unknown', inplace=True)
+           print(f"Filled {col} nulls with 'Unknown'")
+   ```
+
+6. **Verify no nulls remain**
+
+   ```python
+   print("\n10k dataset remaining nulls:", df_10k.isnull().sum().sum())
+   print("25k dataset remaining nulls:", df_25k.isnull().sum().sum())
+   ```
+
+7. **Save cleaned datasets**
+
+   ```python
+   df_10k.to_csv('../data/cleaned/shops_cleaned_10k.csv', index=False)
+   df_25k.to_csv('../data/cleaned/shops_cleaned_25k.csv', index=False)
+   print("✓ Cleaned datasets saved to data/cleaned/")
+   ```
+
+### Your Deliverable
+
+A Jupyter notebook showing:
+- Null value counts for both datasets
+- Before/after comparison
+- Cleaned datasets saved to `data/cleaned/`
+
+### Commit Your Work
+
+```
+git add notebooks/02_data_cleaning_part1.ipynb
+git add data/cleaned/
+git commit -m "Day 2: Null value handling and initial data cleaning"
+```
+
+### What You Learned
+
+- How to identify missing data
+- Different strategies for filling nulls (median for numbers, 'Unknown' for text)
+- How to verify data quality improved
+
+### Tomorrow: Day 3
+
+Tomorrow we'll work on duplicate detection and fixing inconsistent formats.
+
+---
+
+## DAYS 3-7 (Coming Soon)
+
+Check back tomorrow for Day 3 tasks.
