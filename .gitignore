@@ -20,3 +20,10 @@ shops_raw_data_25k.csv
 # Note: CSV files in data/raw/, data/cleaned/, data/processed/ ARE tracked
 # This is training data (synthetic), so it's safe to commit to Git
 
+
+# Trainer-only files (not for interns)
+daily_push.ps1
+push-daily-tasks.ps1
+PUSH_TASKS_GUIDE.md
+*_TRAINER_*.md
+TRAINER_*.md
