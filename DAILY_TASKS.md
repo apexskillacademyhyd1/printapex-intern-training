@@ -2,7 +2,7 @@
 
 I update this file each morning with your tasks for the day. Check back here every morning to see what you need to work on.
 
-You're working with real production data from our system. Two CSV files with quality problems you need to identify and fix. By the end of this week, you'll have completed a full data analytics project.
+You're working with real production data from our system. A CSV file with quality problems you need to identify and fix. By the end of this week, you'll have completed a full data analytics project.
 
 ---
 
@@ -151,16 +151,7 @@ Setup is done. See you tomorrow for Day 1.
 
    This shows you how many missing values each column has.
 
-5. **Do the same for the 25k dataset**
-
-   ```python
-   df_25k = pd.read_csv('../data/raw/shops_raw_data_25k.csv')
-   print(df_25k.head(10))
-   print(df_25k.info())
-   print(df_25k.isnull().sum())
-   ```
-
-6. **Save your notebook**
+5. **Save your notebook**
 
    Name it clearly: `01_data_profiling.ipynb`
 
@@ -184,7 +175,6 @@ git commit -m "Day 1: Initial data profiling"
 You'll notice:
 - Some columns have missing values (NaN)
 - Some columns are strings, some are numbers, some are dates
-- The datasets have different numbers of rows but similar columns
 - Some values might look odd or inconsistent
 
 That's what we're going to fix over the next week.
@@ -204,47 +194,34 @@ That's what we're going to fix over the next week.
    jupyter notebook
    ```
 
-2. **Load both datasets**
+2. **Load the dataset**
 
    ```python
    import pandas as pd
    import numpy as np
    
    df_10k = pd.read_csv('../data/raw/shops_raw_data_10k.csv')
-   df_25k = pd.read_csv('../data/raw/shops_raw_data_25k.csv')
    
-   print("10k dataset shape:", df_10k.shape)
-   print("25k dataset shape:", df_25k.shape)
+   print("Dataset shape:", df_10k.shape)
    ```
 
 3. **Identify null values by column**
 
    ```python
    print("=" * 50)
-   print("10K DATASET - NULL VALUE ANALYSIS")
+   print("DATASET - NULL VALUE ANALYSIS")
    print("=" * 50)
-   null_counts_10k = df_10k.isnull().sum()
-   null_percent_10k = (df_10k.isnull().sum() / len(df_10k)) * 100
+   null_counts = df_10k.isnull().sum()
+   null_percent = (df_10k.isnull().sum() / len(df_10k)) * 100
    
    for col in df_10k.columns:
-       if null_counts_10k[col] > 0:
-           print(f"{col}: {null_counts_10k[col]} nulls ({null_percent_10k[col]:.1f}%)")
-   
-   print("\n" + "=" * 50)
-   print("25K DATASET - NULL VALUE ANALYSIS")
-   print("=" * 50)
-   null_counts_25k = df_25k.isnull().sum()
-   null_percent_25k = (df_25k.isnull().sum() / len(df_25k)) * 100
-   
-   for col in df_25k.columns:
-       if null_counts_25k[col] > 0:
-           print(f"{col}: {null_counts_25k[col]} nulls ({null_percent_25k[col]:.1f}%)")
+       if null_counts[col] > 0:
+           print(f"{col}: {null_counts[col]} nulls ({null_percent[col]:.1f}%)")
    ```
 
 4. **Fix numeric columns: Replace nulls with median**
 
    ```python
-   # For 10k dataset
    numeric_cols = df_10k.select_dtypes(include=[np.number]).columns
    
    for col in numeric_cols:
@@ -252,54 +229,38 @@ That's what we're going to fix over the next week.
            median_val = df_10k[col].median()
            df_10k[col].fillna(median_val, inplace=True)
            print(f"Filled {col} nulls with median: {median_val}")
-   
-   # For 25k dataset
-   for col in numeric_cols:
-       if df_25k[col].isnull().sum() > 0:
-           median_val = df_25k[col].median()
-           df_25k[col].fillna(median_val, inplace=True)
-           print(f"Filled {col} nulls with median: {median_val}")
    ```
 
 5. **Fix categorical columns: Use "Unknown" for nulls**
 
    ```python
-   # For 10k dataset
    categorical_cols = df_10k.select_dtypes(include=['object']).columns
    
    for col in categorical_cols:
        if df_10k[col].isnull().sum() > 0:
            df_10k[col].fillna('Unknown', inplace=True)
            print(f"Filled {col} nulls with 'Unknown'")
-   
-   # For 25k dataset
-   for col in categorical_cols:
-       if df_25k[col].isnull().sum() > 0:
-           df_25k[col].fillna('Unknown', inplace=True)
-           print(f"Filled {col} nulls with 'Unknown'")
    ```
 
 6. **Verify no nulls remain**
 
    ```python
-   print("\n10k dataset remaining nulls:", df_10k.isnull().sum().sum())
-   print("25k dataset remaining nulls:", df_25k.isnull().sum().sum())
+   print("\nDataset remaining nulls:", df_10k.isnull().sum().sum())
    ```
 
-7. **Save cleaned datasets**
+7. **Save cleaned dataset**
 
    ```python
    df_10k.to_csv('../data/cleaned/shops_cleaned_10k.csv', index=False)
-   df_25k.to_csv('../data/cleaned/shops_cleaned_25k.csv', index=False)
-   print("✓ Cleaned datasets saved to data/cleaned/")
+   print("✓ Cleaned dataset saved to data/cleaned/")
    ```
 
 ### Your Deliverable
 
 A Jupyter notebook showing:
-- Null value counts for both datasets
+- Null value counts for the dataset
 - Before/after comparison
-- Cleaned datasets saved to `data/cleaned/`
+- Cleaned dataset saved to `data/cleaned/`
 
 ### Commit Your Work
 
@@ -336,54 +297,39 @@ Tomorrow we'll work on duplicate detection and fixing inconsistent formats.
    jupyter notebook
    ```
 
-2. **Load the cleaned datasets from Day 2**
+2. **Load the cleaned dataset from Day 2**
 
    ```python
    import pandas as pd
    import numpy as np
    
    df_10k = pd.read_csv('../data/cleaned/shops_cleaned_10k.csv')
-   df_25k = pd.read_csv('../data/cleaned/shops_cleaned_25k.csv')
    
-   print("10k dataset shape:", df_10k.shape)
-   print("25k dataset shape:", df_25k.shape)
+   print("Dataset shape:", df_10k.shape)
    ```
 
 3. **Find duplicate rows**
 
    ```python
    print("=" * 50)
-   print("10K DATASET - DUPLICATE ANALYSIS")
+   print("DUPLICATE ANALYSIS")
    print("=" * 50)
    
-   duplicates_10k = df_10k.duplicated().sum()
-   print(f"Total duplicate rows: {duplicates_10k}")
+   duplicates = df_10k.duplicated().sum()
+   print(f"Total duplicate rows: {duplicates}")
    
-   if duplicates_10k > 0:
+   if duplicates > 0:
        print("\nSample duplicates:")
        print(df_10k[df_10k.duplicated(keep=False)].head(10))
-   
-   print("\n" + "=" * 50)
-   print("25K DATASET - DUPLICATE ANALYSIS")
-   print("=" * 50)
-   
-   duplicates_25k = df_25k.duplicated().sum()
-   print(f"Total duplicate rows: {duplicates_25k}")
-   
-   if duplicates_25k > 0:
-       print("\nSample duplicates:")
-       print(df_25k[df_25k.duplicated(keep=False)].head(10))
    ```
 
 4. **Remove duplicates**
 
    ```python
    # Keep the first occurrence, remove subsequent duplicates
-   df_10k_deduped = df_10k.drop_duplicates(keep='first')
-   df_25k_deduped = df_25k.drop_duplicates(keep='first')
+   df_deduped = df_10k.drop_duplicates(keep='first')
    
-   print(f"10k: {len(df_10k)} → {len(df_10k_deduped)} rows ({duplicates_10k} removed)")
-   print(f"25k: {len(df_25k)} → {len(df_25k_deduped)} rows ({duplicates_25k} removed)")
+   print(f"Dataset: {len(df_10k)} → {len(df_deduped)} rows ({duplicates} removed)")
    ```
 
 5. **Identify inconsistent string formats**
@@ -392,20 +338,17 @@ Tomorrow we'll work on duplicate detection and fixing inconsistent formats.
 
    ```python
    # For each text column, show unique values and their frequencies
-   for col in df_10k_deduped.select_dtypes(include=['object']).columns:
+   for col in df_deduped.select_dtypes(include=['object']).columns:
        print(f"\n{col} - Value counts:")
-       print(df_10k_deduped[col].value_counts().head(10))
+       print(df_deduped[col].value_counts().head(10))
    ```
 
 6. **Standardize text formatting**
 
    ```python
    # Convert all text to lowercase and strip whitespace
-   for col in df_10k_deduped.select_dtypes(include=['object']).columns:
-       df_10k_deduped[col] = df_10k_deduped[col].str.lower().str.strip()
-   
-   for col in df_25k_deduped.select_dtypes(include=['object']).columns:
-       df_25k_deduped[col] = df_25k_deduped[col].str.lower().str.strip()
+   for col in df_deduped.select_dtypes(include=['object']).columns:
+       df_deduped[col] = df_deduped[col].str.lower().str.strip()
    
    print("✓ Text formatting standardized (lowercase + whitespace removed)")
    ```
@@ -413,26 +356,23 @@ Tomorrow we'll work on duplicate detection and fixing inconsistent formats.
 7. **Check for data type consistency**
 
    ```python
-   print("\n10K Dataset Data Types:")
-   print(df_10k_deduped.dtypes)
-   
-   print("\n25K Dataset Data Types:")
-   print(df_25k_deduped.dtypes)
+   print("\nDataset Data Types:")
+   print(df_deduped.dtypes)
    ```
 
 8. **Identify and fix outliers in numeric columns**
 
    ```python
-   numeric_cols = df_10k_deduped.select_dtypes(include=[np.number]).columns
+   numeric_cols = df_deduped.select_dtypes(include=[np.number]).columns
    
    for col in numeric_cols:
-       Q1 = df_10k_deduped[col].quantile(0.25)
-       Q3 = df_10k_deduped[col].quantile(0.75)
+       Q1 = df_deduped[col].quantile(0.25)
+       Q3 = df_deduped[col].quantile(0.75)
        IQR = Q3 - Q1
        lower_bound = Q1 - 1.5 * IQR
        upper_bound = Q3 + 1.5 * IQR
        
-       outliers = df_10k_deduped[(df_10k_deduped[col] < lower_bound) | (df_10k_deduped[col] > upper_bound)]
+       outliers = df_deduped[(df_deduped[col] < lower_bound) | (df_deduped[col] > upper_bound)]
        
        if len(outliers) > 0:
            print(f"\n{col}: {len(outliers)} outliers detected")
@@ -440,22 +380,21 @@ Tomorrow we'll work on duplicate detection and fixing inconsistent formats.
            print(f"  Outlier values: {outliers[col].unique()[:5]}")
    ```
 
-9. **Save deduplicated and standardized datasets**
+9. **Save deduplicated and standardized dataset**
 
    ```python
-   df_10k_deduped.to_csv('../data/processed/shops_processed_10k.csv', index=False)
-   df_25k_deduped.to_csv('../data/processed/shops_processed_25k.csv', index=False)
-   print("✓ Processed datasets saved to data/processed/")
+   df_deduped.to_csv('../data/processed/shops_processed_10k.csv', index=False)
+   print("✓ Processed dataset saved to data/processed/")
    ```
 
 ### Your Deliverable
 
 A Jupyter notebook showing:
-- Duplicate row counts for both datasets
+- Duplicate row counts
 - Before/after row counts
 - Text standardization applied
 - Outliers identified by column
-- Processed datasets saved to `data/processed/`
+- Processed dataset saved to `data/processed/`
 
 ### Commit Your Work
 

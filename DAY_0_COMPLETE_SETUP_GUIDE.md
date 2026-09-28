@@ -998,12 +998,6 @@ Press **Enter**.
 
 ## Important Notes
 
-### About the 25k dataset
-
-The current project provides only the `shops_raw_data_10k.csv` file. Your mentor will provide the 25k dataset later if needed.
-
-Do not try to create your own 25k dataset.
-
 ### About the CSV file
 
 Your `shops_raw_data_10k.csv` file is:
