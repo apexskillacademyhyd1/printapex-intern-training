@@ -321,6 +321,163 @@ Tomorrow we'll work on duplicate detection and fixing inconsistent formats.
 
 ---
 
-## DAYS 3-7 (Coming Soon)
+## DAY 3 - Data Cleaning Part 2 (Duplicates & Format Consistency)
 
-Check back tomorrow for Day 3 tasks.
+**What you're doing:** Finding duplicate rows and fixing inconsistent data formats.
+
+**Why it matters:** Duplicates skew your analysis. Inconsistent formats hide real problems. Clean data tells the true story.
+
+### Your Tasks
+
+1. **Create a new notebook: `03_data_cleaning_part2.ipynb`**
+
+   Open Jupyter:
+   ```
+   jupyter notebook
+   ```
+
+2. **Load the cleaned datasets from Day 2**
+
+   ```python
+   import pandas as pd
+   import numpy as np
+   
+   df_10k = pd.read_csv('../data/cleaned/shops_cleaned_10k.csv')
+   df_25k = pd.read_csv('../data/cleaned/shops_cleaned_25k.csv')
+   
+   print("10k dataset shape:", df_10k.shape)
+   print("25k dataset shape:", df_25k.shape)
+   ```
+
+3. **Find duplicate rows**
+
+   ```python
+   print("=" * 50)
+   print("10K DATASET - DUPLICATE ANALYSIS")
+   print("=" * 50)
+   
+   duplicates_10k = df_10k.duplicated().sum()
+   print(f"Total duplicate rows: {duplicates_10k}")
+   
+   if duplicates_10k > 0:
+       print("\nSample duplicates:")
+       print(df_10k[df_10k.duplicated(keep=False)].head(10))
+   
+   print("\n" + "=" * 50)
+   print("25K DATASET - DUPLICATE ANALYSIS")
+   print("=" * 50)
+   
+   duplicates_25k = df_25k.duplicated().sum()
+   print(f"Total duplicate rows: {duplicates_25k}")
+   
+   if duplicates_25k > 0:
+       print("\nSample duplicates:")
+       print(df_25k[df_25k.duplicated(keep=False)].head(10))
+   ```
+
+4. **Remove duplicates**
+
+   ```python
+   # Keep the first occurrence, remove subsequent duplicates
+   df_10k_deduped = df_10k.drop_duplicates(keep='first')
+   df_25k_deduped = df_25k.drop_duplicates(keep='first')
+   
+   print(f"10k: {len(df_10k)} → {len(df_10k_deduped)} rows ({duplicates_10k} removed)")
+   print(f"25k: {len(df_25k)} → {len(df_25k_deduped)} rows ({duplicates_25k} removed)")
+   ```
+
+5. **Identify inconsistent string formats**
+
+   Look for columns with text data that might be inconsistent:
+
+   ```python
+   # For each text column, show unique values and their frequencies
+   for col in df_10k_deduped.select_dtypes(include=['object']).columns:
+       print(f"\n{col} - Value counts:")
+       print(df_10k_deduped[col].value_counts().head(10))
+   ```
+
+6. **Standardize text formatting**
+
+   ```python
+   # Convert all text to lowercase and strip whitespace
+   for col in df_10k_deduped.select_dtypes(include=['object']).columns:
+       df_10k_deduped[col] = df_10k_deduped[col].str.lower().str.strip()
+   
+   for col in df_25k_deduped.select_dtypes(include=['object']).columns:
+       df_25k_deduped[col] = df_25k_deduped[col].str.lower().str.strip()
+   
+   print("✓ Text formatting standardized (lowercase + whitespace removed)")
+   ```
+
+7. **Check for data type consistency**
+
+   ```python
+   print("\n10K Dataset Data Types:")
+   print(df_10k_deduped.dtypes)
+   
+   print("\n25K Dataset Data Types:")
+   print(df_25k_deduped.dtypes)
+   ```
+
+8. **Identify and fix outliers in numeric columns**
+
+   ```python
+   numeric_cols = df_10k_deduped.select_dtypes(include=[np.number]).columns
+   
+   for col in numeric_cols:
+       Q1 = df_10k_deduped[col].quantile(0.25)
+       Q3 = df_10k_deduped[col].quantile(0.75)
+       IQR = Q3 - Q1
+       lower_bound = Q1 - 1.5 * IQR
+       upper_bound = Q3 + 1.5 * IQR
+       
+       outliers = df_10k_deduped[(df_10k_deduped[col] < lower_bound) | (df_10k_deduped[col] > upper_bound)]
+       
+       if len(outliers) > 0:
+           print(f"\n{col}: {len(outliers)} outliers detected")
+           print(f"  Range: {lower_bound:.2f} to {upper_bound:.2f}")
+           print(f"  Outlier values: {outliers[col].unique()[:5]}")
+   ```
+
+9. **Save deduplicated and standardized datasets**
+
+   ```python
+   df_10k_deduped.to_csv('../data/processed/shops_processed_10k.csv', index=False)
+   df_25k_deduped.to_csv('../data/processed/shops_processed_25k.csv', index=False)
+   print("✓ Processed datasets saved to data/processed/")
+   ```
+
+### Your Deliverable
+
+A Jupyter notebook showing:
+- Duplicate row counts for both datasets
+- Before/after row counts
+- Text standardization applied
+- Outliers identified by column
+- Processed datasets saved to `data/processed/`
+
+### Commit Your Work
+
+```
+git add notebooks/03_data_cleaning_part2.ipynb
+git add data/processed/
+git commit -m "Day 3: Duplicate removal and format standardization"
+```
+
+### What You Learned
+
+- How to identify and remove duplicates
+- How to standardize text formatting
+- How to detect outliers using the Interquartile Range (IQR) method
+- Data quality is an iterative process—each pass reveals more problems
+
+### Tomorrow: Day 4
+
+Tomorrow we'll validate the data against business rules and create our first analysis dashboard.
+
+---
+
+## DAYS 4-7 (Coming Soon)
+
+Check back tomorrow for Day 4 tasks.

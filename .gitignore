@@ -24,6 +24,7 @@ shops_raw_data_25k.csv
 # Trainer-only files (not for interns)
 daily_push.ps1
 push-daily-tasks.ps1
+push-day.ps1
 PUSH_TASKS_GUIDE.md
 *_TRAINER_*.md
 TRAINER_*.md
