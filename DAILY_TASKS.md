@@ -417,6 +417,235 @@ Tomorrow we'll validate the data against business rules and create our first ana
 
 ---
 
-## DAYS 4-7 (Coming Soon)
+## DAY 4 - Data Validation & Business Rules
 
-Check back tomorrow for Day 4 tasks.
+**What you're doing:** Applying business logic and validation rules to ensure data integrity.
+
+**Why it matters:** Clean data isn't just about formatting—it needs to make sense for your business. Invalid combinations or impossible values can break reports and lead to wrong decisions.
+
+### Your Tasks
+
+1. **Create a new notebook: `04_data_validation.ipynb`**
+
+   Open Jupyter:
+   ```
+   jupyter notebook
+   ```
+
+2. **Load the processed dataset from Day 3**
+
+   ```python
+   import pandas as pd
+   import numpy as np
+   from datetime import datetime
+   
+   df = pd.read_csv('../data/processed/shops_processed_10k.csv')
+   
+   print("Dataset shape:", df.shape)
+   print("\nFirst few rows:")
+   print(df.head())
+   ```
+
+3. **Define validation rules**
+
+   Create a list to track all validation issues:
+
+   ```python
+   validation_issues = []
+   
+   def log_issue(rule_name, count, description):
+       validation_issues.append({
+           'Rule': rule_name,
+           'Failed_Records': count,
+           'Description': description
+       })
+       print(f"❌ {rule_name}: {count} records failed - {description}")
+   ```
+
+4. **Rule 1: Check for negative numeric values**
+
+   ```python
+   print("\n" + "="*50)
+   print("RULE 1: NEGATIVE VALUE CHECK")
+   print("="*50)
+   
+   numeric_cols = df.select_dtypes(include=[np.number]).columns
+   
+   for col in numeric_cols:
+       negative_count = (df[col] < 0).sum()
+       if negative_count > 0:
+           log_issue(f"Negative_{col}", negative_count, f"{col} should not be negative")
+           print(f"  Sample negative values: {df[df[col] < 0][col].head().tolist()}")
+   ```
+
+5. **Rule 2: Date consistency checks**
+
+   ```python
+   print("\n" + "="*50)
+   print("RULE 2: DATE CONSISTENCY")
+   print("="*50)
+   
+   # Example: created_at should be before updated_at
+   date_cols = [col for col in df.columns if 'date' in col.lower() or 'at' in col.lower()]
+   print(f"Date columns found: {date_cols}")
+   
+   # Add your specific date validation logic based on your columns
+   ```
+
+6. **Rule 3: Required field validation**
+
+   ```python
+   print("\n" + "="*50)
+   print("RULE 3: REQUIRED FIELDS")
+   print("="*50)
+   
+   # Define which columns should never be empty/null
+   required_fields = ['business_name', 'city', 'state']  # Adjust based on your data
+   
+   for col in required_fields:
+       if col in df.columns:
+           missing = df[col].isnull().sum()
+           empty = (df[col] == '').sum() if df[col].dtype == 'object' else 0
+           total_invalid = missing + empty
+           
+           if total_invalid > 0:
+               log_issue(f"Required_{col}", total_invalid, f"{col} is required but has missing/empty values")
+   ```
+
+7. **Rule 4: Value range validation**
+
+   ```python
+   print("\n" + "="*50)
+   print("RULE 4: VALUE RANGES")
+   print("="*50)
+   
+   # Example: Phone numbers should be 10 digits (if you have a phone column)
+   if 'contact_phone' in df.columns:
+       df['phone_length'] = df['contact_phone'].astype(str).str.len()
+       invalid_phones = ((df['phone_length'] != 10) & (df['contact_phone'].notna())).sum()
+       if invalid_phones > 0:
+           log_issue("Invalid_Phone_Length", invalid_phones, "Phone numbers should be exactly 10 digits")
+   
+   # Example: Postal codes should be 6 digits (Indian PIN codes)
+   if 'postal_code' in df.columns:
+       df['pin_length'] = df['postal_code'].astype(str).str.len()
+       invalid_pins = ((df['pin_length'] != 6) & (df['postal_code'].notna())).sum()
+       if invalid_pins > 0:
+           log_issue("Invalid_Postal_Code", invalid_pins, "Postal codes should be exactly 6 digits")
+   ```
+
+8. **Rule 5: Categorical value validation**
+
+   ```python
+   print("\n" + "="*50)
+   print("RULE 5: VALID CATEGORIES")
+   print("="*50)
+   
+   # Example: Status column should only have specific values
+   if 'status' in df.columns:
+       valid_statuses = ['active', 'inactive', 'pending', 'suspended']
+       invalid_status = ~df['status'].isin(valid_statuses)
+       invalid_count = invalid_status.sum()
+       
+       if invalid_count > 0:
+           log_issue("Invalid_Status", invalid_count, f"Status must be one of {valid_statuses}")
+           print(f"  Found invalid values: {df[invalid_status]['status'].unique().tolist()}")
+   ```
+
+9. **Rule 6: Cross-field validation**
+
+   ```python
+   print("\n" + "="*50)
+   print("RULE 6: CROSS-FIELD LOGIC")
+   print("="*50)
+   
+   # Example: If a shop has GST registration, it should have a GST number
+   if 'gst_registered' in df.columns and 'gst_number' in df.columns:
+       missing_gst = ((df['gst_registered'] == 'yes') & (df['gst_number'].isnull())).sum()
+       if missing_gst > 0:
+           log_issue("GST_Registration_Mismatch", missing_gst, "Registered shops must have GST number")
+   ```
+
+10. **Create validation summary report**
+
+    ```python
+    print("\n" + "="*50)
+    print("VALIDATION SUMMARY REPORT")
+    print("="*50)
+    
+    if len(validation_issues) == 0:
+        print("✅ All validation rules passed! Dataset is valid.")
+    else:
+        validation_df = pd.DataFrame(validation_issues)
+        print(f"\n❌ Found {len(validation_issues)} validation failures:\n")
+        print(validation_df.to_string(index=False))
+        
+        # Save validation report
+        validation_df.to_csv('../output/validation_report.csv', index=False)
+        print("\n✓ Validation report saved to output/validation_report.csv")
+    
+    # Calculate data quality score
+    total_records = len(df)
+    total_failed = sum([issue['Failed_Records'] for issue in validation_issues])
+    quality_score = ((total_records - total_failed) / total_records) * 100
+    
+    print(f"\n📊 Data Quality Score: {quality_score:.2f}%")
+    print(f"   Total records: {total_records}")
+    print(f"   Failed validations: {total_failed}")
+    print(f"   Clean records: {total_records - total_failed}")
+    ```
+
+11. **Clean the data based on validation results**
+
+    ```python
+    # Decide what to do with failed records
+    # Option 1: Remove all invalid rows (aggressive)
+    # Option 2: Fix specific issues (conservative)
+    # Option 3: Flag for manual review (safe)
+    
+    # Example: Remove rows with critical issues only
+    df_validated = df.copy()
+    
+    # Your cleaning logic here based on validation results
+    print(f"\n✓ Dataset after validation: {len(df_validated)} rows")
+    
+    # Save validated dataset
+    df_validated.to_csv('../data/processed/shops_validated_10k.csv', index=False)
+    print("✓ Validated dataset saved to data/processed/shops_validated_10k.csv")
+    ```
+
+### Your Deliverable
+
+A Jupyter notebook showing:
+- All validation rules executed
+- Validation summary report
+- Data quality score
+- Validated dataset saved to `data/processed/`
+- Validation report saved to `output/`
+
+### Commit Your Work
+
+```
+git add notebooks/04_data_validation.ipynb
+git add output/validation_report.csv
+git add data/processed/shops_validated_10k.csv
+git commit -m "Day 4: Data validation and business rules applied"
+```
+
+### What You Learned
+
+- How to define and implement business rules
+- How to validate data across multiple dimensions
+- How to create data quality reports
+- How to calculate data quality metrics
+- The difference between clean data and valid data
+
+### Tomorrow: Day 5
+
+Tomorrow we'll start analyzing the data with SQL queries and basic statistics.
+
+---
+
+## DAYS 5-7 (Coming Soon)
+
+Check back tomorrow for Day 5 tasks.
