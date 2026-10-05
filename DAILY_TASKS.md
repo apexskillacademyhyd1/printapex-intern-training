@@ -646,6 +646,287 @@ Tomorrow we'll start analyzing the data with SQL queries and basic statistics.
 
 ---
 
-## DAYS 5-7 (Coming Soon)
+## DAY 5 - SQL Analysis & Business Statistics
 
-Check back tomorrow for Day 5 tasks.
+**What you're doing:** Using SQL to query the validated data and calculating key business metrics.
+
+**Why it matters:** Analysis transforms clean data into insights. You'll identify patterns that drive business decisions—which shops are thriving, where problems exist, and what opportunities lie ahead.
+
+### Your Tasks
+
+1. **Create a new notebook: `05_sql_analysis_statistics.ipynb`**
+
+   Open Jupyter:
+   ```
+   jupyter notebook
+   ```
+
+2. **Load the validated dataset and set up SQLite database**
+
+   ```python
+   import pandas as pd
+   import sqlite3
+   import numpy as np
+   from datetime import datetime
+   
+   # Load validated data
+   df = pd.read_csv('../data/processed/shops_validated_10k.csv')
+   
+   print("Dataset shape:", df.shape)
+   print("Columns:", df.columns.tolist())
+   
+   # Create SQLite database from the validated data
+   conn = sqlite3.connect('../data/shops_analysis.db')
+   df.to_sql('shops', conn, if_exists='replace', index=False)
+   
+   print("✓ Database created: shops_analysis.db")
+   ```
+
+3. **Query 1: Basic aggregate statistics**
+
+   ```python
+   # Query: Count shops by state
+   query1 = """
+   SELECT 
+       state,
+       COUNT(*) as shop_count,
+       ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM shops), 2) as percentage
+   FROM shops
+   GROUP BY state
+   ORDER BY shop_count DESC
+   LIMIT 10;
+   """
+   
+   result1 = pd.read_sql_query(query1, conn)
+   print("="*50)
+   print("QUERY 1: Shops by State")
+   print("="*50)
+   print(result1.to_string(index=False))
+   ```
+
+4. **Query 2: Revenue analysis by region**
+
+   ```python
+   # Query: Total and average revenue by city (top 15)
+   query2 = """
+   SELECT 
+       city,
+       state,
+       COUNT(*) as shop_count,
+       ROUND(AVG(annual_revenue), 2) as avg_revenue,
+       ROUND(SUM(annual_revenue), 2) as total_revenue,
+       ROUND(MAX(annual_revenue), 2) as max_revenue,
+       ROUND(MIN(annual_revenue), 2) as min_revenue
+   FROM shops
+   WHERE annual_revenue IS NOT NULL
+   GROUP BY city, state
+   ORDER BY total_revenue DESC
+   LIMIT 15;
+   """
+   
+   result2 = pd.read_sql_query(query2, conn)
+   print("\n" + "="*50)
+   print("QUERY 2: Revenue Analysis by City (Top 15)")
+   print("="*50)
+   print(result2.to_string(index=False))
+   ```
+
+5. **Query 3: Shop status distribution**
+
+   ```python
+   # Query: Breakdown of shop statuses
+   query3 = """
+   SELECT 
+       status,
+       COUNT(*) as shop_count,
+       ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM shops), 2) as percentage
+   FROM shops
+   GROUP BY status
+   ORDER BY shop_count DESC;
+   """
+   
+   result3 = pd.read_sql_query(query3, conn)
+   print("\n" + "="*50)
+   print("QUERY 3: Shop Status Distribution")
+   print("="*50)
+   print(result3.to_string(index=False))
+   ```
+
+6. **Query 4: Print volume analysis**
+
+   ```python
+   # Query: Print volume statistics
+   query4 = """
+   SELECT 
+       CASE 
+           WHEN monthly_print_volume < 1000 THEN 'Low (0-999)'
+           WHEN monthly_print_volume < 5000 THEN 'Medium (1k-5k)'
+           WHEN monthly_print_volume < 10000 THEN 'High (5k-10k)'
+           ELSE 'Very High (10k+)'
+       END as volume_segment,
+       COUNT(*) as shop_count,
+       ROUND(AVG(monthly_print_volume), 0) as avg_volume,
+       ROUND(AVG(annual_revenue), 2) as avg_revenue
+   FROM shops
+   WHERE monthly_print_volume IS NOT NULL
+   GROUP BY volume_segment
+   ORDER BY avg_volume;
+   """
+   
+   result4 = pd.read_sql_query(query4, conn)
+   print("\n" + "="*50)
+   print("QUERY 4: Print Volume Segments")
+   print("="*50)
+   print(result4.to_string(index=False))
+   ```
+
+7. **Query 5: High-value customers**
+
+   ```python
+   # Query: Top 20 highest revenue shops
+   query5 = """
+   SELECT 
+       business_name,
+       city,
+       state,
+       annual_revenue,
+       monthly_print_volume,
+       status
+   FROM shops
+   WHERE annual_revenue IS NOT NULL
+   ORDER BY annual_revenue DESC
+   LIMIT 20;
+   """
+   
+   result5 = pd.read_sql_query(query5, conn)
+   print("\n" + "="*50)
+   print("QUERY 5: Top 20 Highest Revenue Shops")
+   print("="*50)
+   print(result5.to_string(index=False))
+   ```
+
+8. **Calculate summary statistics**
+
+   ```python
+   print("\n" + "="*50)
+   print("SUMMARY STATISTICS")
+   print("="*50)
+   
+   # Overall metrics
+   total_shops = len(df)
+   active_shops = len(df[df['status'] == 'active'])
+   total_revenue = df['annual_revenue'].sum()
+   avg_revenue = df['annual_revenue'].mean()
+   median_revenue = df['annual_revenue'].median()
+   
+   print(f"\nTotal Shops: {total_shops:,}")
+   print(f"Active Shops: {active_shops:,} ({active_shops/total_shops*100:.1f}%)")
+   print(f"Total Annual Revenue: ${total_revenue:,.2f}")
+   print(f"Average Revenue per Shop: ${avg_revenue:,.2f}")
+   print(f"Median Revenue: ${median_revenue:,.2f}")
+   
+   # Print volume metrics
+   avg_volume = df['monthly_print_volume'].mean()
+   total_volume = df['monthly_print_volume'].sum()
+   max_volume_shop = df.loc[df['monthly_print_volume'].idxmax()]
+   
+   print(f"\nTotal Monthly Print Volume: {total_volume:,.0f} prints")
+   print(f"Average Monthly Volume per Shop: {avg_volume:,.0f} prints")
+   print(f"Highest Volume Shop: {max_volume_shop['business_name']} ({max_volume_shop['monthly_print_volume']:,.0f} prints/month)")
+   ```
+
+9. **Create insights summary**
+
+   ```python
+   print("\n" + "="*50)
+   print("KEY INSIGHTS")
+   print("="*50)
+   
+   # Insight 1: Geographic concentration
+   state_diversity = df['state'].nunique()
+   top_state = df['state'].value_counts().index[0]
+   top_state_pct = df['state'].value_counts().iloc[0] / len(df) * 100
+   
+   print(f"\n1. GEOGRAPHIC CONCENTRATION:")
+   print(f"   - Shops across {state_diversity} states")
+   print(f"   - Top state ({top_state}): {top_state_pct:.1f}% of shops")
+   
+   # Insight 2: Revenue distribution
+   high_revenue_threshold = df['annual_revenue'].quantile(0.75)
+   high_revenue_shops = len(df[df['annual_revenue'] > high_revenue_threshold])
+   
+   print(f"\n2. REVENUE DISTRIBUTION:")
+   print(f"   - Top 25% of shops: ${high_revenue_threshold:,.0f}+ revenue")
+   print(f"   - These {high_revenue_shops} shops generate {df[df['annual_revenue'] > high_revenue_threshold]['annual_revenue'].sum() / total_revenue * 100:.1f}% of total revenue")
+   
+   # Insight 3: Volume correlation
+   corr = df['monthly_print_volume'].corr(df['annual_revenue'])
+   print(f"\n3. VOLUME-REVENUE CORRELATION:")
+   print(f"   - Correlation coefficient: {corr:.3f}")
+   if corr > 0.5:
+       print(f"   - Strong positive relationship: Higher volume = Higher revenue")
+   elif corr > 0.3:
+       print(f"   - Moderate relationship between volume and revenue")
+   else:
+       print(f"   - Weak relationship between volume and revenue")
+   
+   # Insight 4: Status breakdown
+   print(f"\n4. SHOP STATUS:")
+   for status in df['status'].unique():
+       count = len(df[df['status'] == status])
+       pct = count / len(df) * 100
+       print(f"   - {status.title()}: {count:,} shops ({pct:.1f}%)")
+   ```
+
+10. **Export query results for visualization**
+
+    ```python
+    # Save query results for use in Day 6 visualization
+    
+    result1.to_csv('../output/analysis_shops_by_state.csv', index=False)
+    result2.to_csv('../output/analysis_revenue_by_city.csv', index=False)
+    result3.to_csv('../output/analysis_status_distribution.csv', index=False)
+    result4.to_csv('../output/analysis_volume_segments.csv', index=False)
+    result5.to_csv('../output/analysis_top_revenue_shops.csv', index=False)
+    
+    print("\n✓ All query results exported to output/")
+    ```
+
+11. **Close database connection**
+
+    ```python
+    conn.close()
+    print("✓ Database connection closed")
+    ```
+
+### Your Deliverable
+
+A Jupyter notebook showing:
+- SQLite database created from validated data
+- 5 SQL queries with results
+- Summary statistics calculated
+- Key business insights identified
+- Query results exported to CSV files
+- Analysis complete and ready for visualization
+
+### Commit Your Work
+
+```
+git add notebooks/05_sql_analysis_statistics.ipynb
+git add output/analysis_*.csv
+git add data/shops_analysis.db
+git commit -m "Day 5: SQL analysis and business statistics"
+```
+
+### What You Learned
+
+- How to write SQL queries for data analysis
+- How to calculate aggregate statistics
+- How to identify business insights from data
+- How to segment customers by behavior
+- How to correlate multiple metrics
+- How to export analysis results for visualization
+
+### Tomorrow: Day 6
+
+Tomorrow we'll create visual charts and dashboards from these query results using matplotlib and seaborn.
