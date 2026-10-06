@@ -930,3 +930,409 @@ git commit -m "Day 5: SQL analysis and business statistics"
 ### Tomorrow: Day 6
 
 Tomorrow we'll create visual charts and dashboards from these query results using matplotlib and seaborn.
+
+
+---
+
+## DAY 6 - Data Visualization & Charts
+
+**What you're doing:** Creating visual charts and dashboards from your analysis data using matplotlib and seaborn.
+
+**Why it matters:** Visualizations tell stories that raw numbers can't. A good chart reveals patterns instantly, communicates findings to non-technical stakeholders, and helps you spot trends you'd miss in spreadsheets.
+
+### Your Tasks
+
+1. **Create a new notebook: `06_data_visualization.ipynb`**
+
+   Open Jupyter:
+   ```
+   jupyter notebook
+   ```
+
+2. **Load query results from Day 5**
+
+   ```python
+   import pandas as pd
+   import matplotlib.pyplot as plt
+   import seaborn as sns
+   import numpy as np
+   
+   # Set style for all charts
+   sns.set_style("whitegrid")
+   plt.rcParams['figure.figsize'] = (14, 8)
+   
+   # Load analysis results from Day 5
+   shops_by_state = pd.read_csv('../output/analysis_shops_by_state.csv')
+   revenue_by_city = pd.read_csv('../output/analysis_revenue_by_city.csv')
+   status_dist = pd.read_csv('../output/analysis_status_distribution.csv')
+   volume_segments = pd.read_csv('../output/analysis_volume_segments.csv')
+   top_revenue = pd.read_csv('../output/analysis_top_revenue_shops.csv')
+   
+   print("✓ All analysis files loaded successfully")
+   ```
+
+3. **Chart 1: Shops by State (Bar Chart)**
+
+   ```python
+   # Create a bar chart showing shop distribution by state
+   fig, ax = plt.subplots(figsize=(14, 6))
+   
+   shops_by_state_sorted = shops_by_state.sort_values('shop_count', ascending=False)
+   
+   bars = ax.bar(shops_by_state_sorted['state'], 
+                 shops_by_state_sorted['shop_count'],
+                 color='steelblue',
+                 edgecolor='navy',
+                 alpha=0.8)
+   
+   # Add value labels on top of bars
+   for bar in bars:
+       height = bar.get_height()
+       ax.text(bar.get_x() + bar.get_width()/2., height,
+               f'{int(height):,}',
+               ha='center', va='bottom', fontsize=9)
+   
+   ax.set_xlabel('State', fontsize=12, fontweight='bold')
+   ax.set_ylabel('Number of Shops', fontsize=12, fontweight='bold')
+   ax.set_title('Shop Distribution by State (Top 15)', fontsize=14, fontweight='bold')
+   ax.grid(axis='y', alpha=0.3)
+   
+   plt.xticks(rotation=45, ha='right')
+   plt.tight_layout()
+   plt.savefig('../output/chart_01_shops_by_state.png', dpi=300, bbox_inches='tight')
+   print("✓ Chart saved: chart_01_shops_by_state.png")
+   plt.show()
+   ```
+
+4. **Chart 2: Revenue Distribution by City (Top 10)**
+
+   ```python
+   # Create a horizontal bar chart for top cities by revenue
+   fig, ax = plt.subplots(figsize=(12, 8))
+   
+   top_cities = revenue_by_city.head(10).sort_values('total_revenue', ascending=True)
+   
+   bars = ax.barh(top_cities['city'] + ', ' + top_cities['state'],
+                  top_cities['total_revenue'],
+                  color='coral',
+                  edgecolor='darkred',
+                  alpha=0.8)
+   
+   # Add value labels
+   for i, bar in enumerate(bars):
+       width = bar.get_width()
+       ax.text(width, bar.get_y() + bar.get_height()/2.,
+               f'${width:,.0f}',
+               ha='left', va='center', fontsize=9, fontweight='bold')
+   
+   ax.set_xlabel('Total Revenue ($)', fontsize=12, fontweight='bold')
+   ax.set_ylabel('City, State', fontsize=12, fontweight='bold')
+   ax.set_title('Top 10 Cities by Total Annual Revenue', fontsize=14, fontweight='bold')
+   ax.grid(axis='x', alpha=0.3)
+   
+   plt.tight_layout()
+   plt.savefig('../output/chart_02_revenue_by_city.png', dpi=300, bbox_inches='tight')
+   print("✓ Chart saved: chart_02_revenue_by_city.png")
+   plt.show()
+   ```
+
+5. **Chart 3: Shop Status Distribution (Pie Chart)**
+
+   ```python
+   # Create a pie chart showing status distribution
+   fig, ax = plt.subplots(figsize=(10, 8))
+   
+   colors = ['#2ecc71', '#e74c3c', '#f39c12', '#9b59b6']
+   explode = (0.05, 0, 0, 0)  # Explode the largest slice slightly
+   
+   wedges, texts, autotexts = ax.pie(status_dist['shop_count'],
+                                      labels=status_dist['status'].str.title(),
+                                      autopct='%1.1f%%',
+                                      startangle=90,
+                                      colors=colors,
+                                      explode=explode,
+                                      textprops={'fontsize': 11, 'fontweight': 'bold'})
+   
+   # Enhance text
+   for autotext in autotexts:
+       autotext.set_color('white')
+       autotext.set_fontsize(10)
+       autotext.set_fontweight('bold')
+   
+   ax.set_title('Shop Status Distribution', fontsize=14, fontweight='bold', pad=20)
+   
+   # Add legend with counts
+   legend_labels = [f"{status.title()}: {count:,}" 
+                    for status, count in zip(status_dist['status'], status_dist['shop_count'])]
+   ax.legend(legend_labels, loc='upper left', bbox_to_anchor=(1, 1))
+   
+   plt.tight_layout()
+   plt.savefig('../output/chart_03_status_distribution.png', dpi=300, bbox_inches='tight')
+   print("✓ Chart saved: chart_03_status_distribution.png")
+   plt.show()
+   ```
+
+6. **Chart 4: Print Volume Segments (Grouped Bar Chart)**
+
+   ```python
+   # Create a grouped bar chart for volume segments
+   fig, ax = plt.subplots(figsize=(12, 6))
+   
+   x = np.arange(len(volume_segments))
+   width = 0.35
+   
+   bars1 = ax.bar(x - width/2, volume_segments['shop_count'],
+                  width, label='Shop Count', color='skyblue', edgecolor='navy', alpha=0.8)
+   
+   # Create second y-axis for revenue
+   ax2 = ax.twinx()
+   bars2 = ax2.plot(x, volume_segments['avg_revenue'],
+                    marker='o', color='red', linewidth=2, markersize=8, label='Avg Revenue')
+   
+   ax.set_xlabel('Volume Segment', fontsize=12, fontweight='bold')
+   ax.set_ylabel('Number of Shops', fontsize=12, fontweight='bold', color='navy')
+   ax2.set_ylabel('Average Revenue ($)', fontsize=12, fontweight='bold', color='red')
+   
+   ax.set_title('Print Volume Segments: Shop Count vs Average Revenue', fontsize=14, fontweight='bold')
+   ax.set_xticks(x)
+   ax.set_xticklabels(volume_segments['volume_segment'], rotation=15, ha='right')
+   
+   ax.tick_params(axis='y', labelcolor='navy')
+   ax2.tick_params(axis='y', labelcolor='red')
+   ax.grid(axis='y', alpha=0.3)
+   
+   # Add combined legend
+   lines1, labels1 = ax.get_legend_handles_labels()
+   lines2, labels2 = ax2.get_legend_handles_labels()
+   ax.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
+   
+   plt.tight_layout()
+   plt.savefig('../output/chart_04_volume_segments.png', dpi=300, bbox_inches='tight')
+   print("✓ Chart saved: chart_04_volume_segments.png")
+   plt.show()
+   ```
+
+7. **Chart 5: Top 15 Revenue Shops (Horizontal Bar with Color Gradient)**
+
+   ```python
+   # Create a horizontal bar chart for top 15 revenue shops
+   fig, ax = plt.subplots(figsize=(12, 10))
+   
+   top_15 = top_revenue.head(15).sort_values('annual_revenue', ascending=True)
+   
+   # Create color gradient from low to high
+   colors_gradient = plt.cm.Greens(np.linspace(0.4, 0.9, len(top_15)))
+   
+   bars = ax.barh(top_15['business_name'],
+                  top_15['annual_revenue'],
+                  color=colors_gradient,
+                  edgecolor='darkgreen',
+                  alpha=0.85)
+   
+   # Add value labels
+   for i, bar in enumerate(bars):
+       width = bar.get_width()
+       ax.text(width, bar.get_y() + bar.get_height()/2.,
+               f'${width:,.0f}',
+               ha='left', va='center', fontsize=9, fontweight='bold')
+   
+   ax.set_xlabel('Annual Revenue ($)', fontsize=12, fontweight='bold')
+   ax.set_title('Top 15 Highest Revenue Shops', fontsize=14, fontweight='bold')
+   ax.grid(axis='x', alpha=0.3)
+   
+   plt.tight_layout()
+   plt.savefig('../output/chart_05_top_revenue_shops.png', dpi=300, bbox_inches='tight')
+   print("✓ Chart saved: chart_05_top_revenue_shops.png")
+   plt.show()
+   ```
+
+8. **Chart 6: Revenue Distribution (Histogram with KDE)**
+
+   ```python
+   # Load full dataset for distribution analysis
+   df_full = pd.read_csv('../data/processed/shops_validated_10k.csv')
+   
+   fig, ax = plt.subplots(figsize=(12, 6))
+   
+   # Create histogram with KDE
+   df_full['annual_revenue'].hist(bins=50, ax=ax, color='lightblue',
+                                   edgecolor='black', alpha=0.7)
+   
+   # Add KDE curve
+   df_full['annual_revenue'].plot(kind='density', ax=ax, secondary_y=False,
+                                  color='red', linewidth=2, label='Distribution Curve')
+   
+   ax.set_xlabel('Annual Revenue ($)', fontsize=12, fontweight='bold')
+   ax.set_ylabel('Number of Shops', fontsize=12, fontweight='bold')
+   ax.set_title('Revenue Distribution Across All Shops', fontsize=14, fontweight='bold')
+   ax.grid(axis='y', alpha=0.3)
+   ax.legend()
+   
+   plt.tight_layout()
+   plt.savefig('../output/chart_06_revenue_distribution.png', dpi=300, bbox_inches='tight')
+   print("✓ Chart saved: chart_06_revenue_distribution.png")
+   plt.show()
+   ```
+
+9. **Chart 7: Print Volume vs Revenue Scatter Plot**
+
+   ```python
+   # Create scatter plot showing correlation
+   fig, ax = plt.subplots(figsize=(12, 8))
+   
+   # Create scatter plot with color coding by status
+   for status in df_full['status'].unique():
+       subset = df_full[df_full['status'] == status]
+       ax.scatter(subset['monthly_print_volume'],
+                 subset['annual_revenue'],
+                 label=status.title(),
+                 alpha=0.6,
+                 s=50,
+                 edgecolors='black',
+                 linewidth=0.5)
+   
+   # Add trend line
+   z = np.polyfit(df_full['monthly_print_volume'].dropna(), 
+                  df_full['annual_revenue'].dropna(), 1)
+   p = np.poly1d(z)
+   x_trend = np.linspace(df_full['monthly_print_volume'].min(),
+                        df_full['monthly_print_volume'].max(), 100)
+   ax.plot(x_trend, p(x_trend), "r--", linewidth=2, label='Trend Line')
+   
+   ax.set_xlabel('Monthly Print Volume', fontsize=12, fontweight='bold')
+   ax.set_ylabel('Annual Revenue ($)', fontsize=12, fontweight='bold')
+   ax.set_title('Print Volume vs Annual Revenue (with Trend Line)', fontsize=14, fontweight='bold')
+   ax.legend(loc='upper left')
+   ax.grid(True, alpha=0.3)
+   
+   plt.tight_layout()
+   plt.savefig('../output/chart_07_volume_vs_revenue.png', dpi=300, bbox_inches='tight')
+   print("✓ Chart saved: chart_07_volume_vs_revenue.png")
+   plt.show()
+   ```
+
+10. **Create a summary visualization dashboard**
+
+    ```python
+    # Create a multi-panel dashboard
+    fig = plt.figure(figsize=(16, 12))
+    gs = fig.add_gridspec(3, 2, hspace=0.3, wspace=0.3)
+    
+    # Panel 1: Status pie
+    ax1 = fig.add_subplot(gs[0, 0])
+    colors = ['#2ecc71', '#e74c3c', '#f39c12', '#9b59b6']
+    ax1.pie(status_dist['shop_count'], labels=status_dist['status'].str.title(),
+            autopct='%1.1f%%', colors=colors, startangle=90)
+    ax1.set_title('Shop Status Distribution', fontweight='bold')
+    
+    # Panel 2: Top states
+    ax2 = fig.add_subplot(gs[0, 1])
+    top_5_states = shops_by_state.head(5).sort_values('shop_count', ascending=True)
+    ax2.barh(top_5_states['state'], top_5_states['shop_count'],
+             color='steelblue', edgecolor='navy', alpha=0.8)
+    ax2.set_xlabel('Shop Count', fontweight='bold')
+    ax2.set_title('Top 5 States by Shop Count', fontweight='bold')
+    ax2.grid(axis='x', alpha=0.3)
+    
+    # Panel 3: Revenue distribution histogram
+    ax3 = fig.add_subplot(gs[1, :])
+    ax3.hist(df_full['annual_revenue'], bins=40, color='lightblue',
+             edgecolor='black', alpha=0.7)
+    ax3.set_xlabel('Annual Revenue ($)', fontweight='bold')
+    ax3.set_ylabel('Number of Shops', fontweight='bold')
+    ax3.set_title('Revenue Distribution', fontweight='bold')
+    ax3.grid(axis='y', alpha=0.3)
+    
+    # Panel 4: Volume segments
+    ax4 = fig.add_subplot(gs[2, 0])
+    ax4.bar(range(len(volume_segments)), volume_segments['shop_count'],
+            color='coral', edgecolor='darkred', alpha=0.8)
+    ax4.set_xticks(range(len(volume_segments)))
+    ax4.set_xticklabels(volume_segments['volume_segment'], rotation=15, ha='right')
+    ax4.set_ylabel('Shop Count', fontweight='bold')
+    ax4.set_title('Volume Segments', fontweight='bold')
+    ax4.grid(axis='y', alpha=0.3)
+    
+    # Panel 5: Volume vs Revenue scatter
+    ax5 = fig.add_subplot(gs[2, 1])
+    for status in df_full['status'].unique():
+        subset = df_full[df_full['status'] == status]
+        ax5.scatter(subset['monthly_print_volume'],
+                   subset['annual_revenue'],
+                   label=status.title(), alpha=0.6, s=30)
+    ax5.set_xlabel('Monthly Print Volume', fontweight='bold')
+    ax5.set_ylabel('Annual Revenue ($)', fontweight='bold')
+    ax5.set_title('Volume vs Revenue', fontweight='bold')
+    ax5.legend(fontsize=8)
+    ax5.grid(True, alpha=0.3)
+    
+    fig.suptitle('Print Shop Analytics Dashboard', fontsize=16, fontweight='bold', y=0.995)
+    
+    plt.savefig('../output/dashboard_full_analytics.png', dpi=300, bbox_inches='tight')
+    print("✓ Dashboard saved: dashboard_full_analytics.png")
+    plt.show()
+    ```
+
+11. **Create a summary report**
+
+    ```python
+    print("\n" + "="*60)
+    print("VISUALIZATION SUMMARY")
+    print("="*60)
+    
+    chart_files = [
+        'chart_01_shops_by_state.png',
+        'chart_02_revenue_by_city.png',
+        'chart_03_status_distribution.png',
+        'chart_04_volume_segments.png',
+        'chart_05_top_revenue_shops.png',
+        'chart_06_revenue_distribution.png',
+        'chart_07_volume_vs_revenue.png',
+        'dashboard_full_analytics.png'
+    ]
+    
+    print("\n✓ Charts created:")
+    for i, chart in enumerate(chart_files, 1):
+        print(f"  {i}. {chart}")
+    
+    print("\n✓ All charts saved to: output/")
+    print("\nThese visualizations show:")
+    print("  • Geographic distribution of shops")
+    print("  • Revenue patterns by location and volume")
+    print("  • Shop status breakdown")
+    print("  • Strong correlation between volume and revenue")
+    print("  • Top performing shops and cities")
+    print("\nNext: Use these charts in your Excel dashboard presentation!")
+    ```
+
+### Your Deliverable
+
+A Jupyter notebook showing:
+- 7 individual charts (PNG format, high resolution)
+- 1 comprehensive analytics dashboard
+- All charts properly labeled with titles and axes
+- Color-coded visualizations for easy interpretation
+- All charts saved to `output/` folder
+
+### Commit Your Work
+
+```
+git add notebooks/06_data_visualization.ipynb
+git add output/chart_*.png
+git add output/dashboard_*.png
+git commit -m "Day 6: Data visualization and dashboard charts"
+```
+
+### What You Learned
+
+- How to create publication-quality charts with matplotlib
+- How to use seaborn for styling and enhanced visuals
+- How to create multi-panel dashboards
+- How to add trend lines and distribution curves
+- How to color-code data by category
+- How to export high-resolution charts (DPI 300)
+- How to tell stories with data visualization
+
+### Tomorrow: Day 7
+
+Tomorrow we'll create an interactive Excel dashboard that brings all these insights together in a professional presentation format.
